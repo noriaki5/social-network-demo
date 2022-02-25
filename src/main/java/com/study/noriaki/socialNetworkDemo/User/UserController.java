@@ -12,10 +12,15 @@ import java.util.Optional;
 import java.util.Set;
 
 @RestController
-public class UserResource {
+public class UserController {
+
+    //@Autowired
+    private UserRepository userRepository;
 
     @Autowired
-    private UserRepository userRepository;
+    public void setUserRepository(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     @GetMapping("/users")
     public List<User> retrieveAllUsers() {
