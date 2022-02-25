@@ -25,7 +25,8 @@ public class UserController {
     }
 
     @PostMapping("/auth/{login}")
-    public ResponseEntity<Object> authUser(@RequestBody String password, @PathVariable String login) {
+    public ResponseEntity<Object> authUser(@RequestBody ObjectNode jsonNodes, @PathVariable String login) {
+        String password = jsonNodes.get("password").asText();
         List<User> users = userService.findByLoginAndPassword(login, password);
 
         if (users.isEmpty()) {

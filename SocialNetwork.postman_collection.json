@@ -94,6 +94,35 @@
 			"response": []
 		},
 		{
+			"name": "authUser",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "    {\r\n        \"password\": \"password1\"\r\n    }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/auth/login1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"auth",
+						"login1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "addFriend",
 			"request": {
 				"method": "POST",
