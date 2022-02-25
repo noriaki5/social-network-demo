@@ -16,4 +16,7 @@ public interface UserService {
     List<User> findAll();
 
     List<User> findByName(String name);
+
+    List<User> findByLoginAndPassword(String login, String password);
+
 }

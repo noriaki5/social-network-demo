@@ -24,6 +24,17 @@ public class UserController {
         this.userService = userService;
     }
 
+    @PostMapping("/auth/{login}")
+    public ResponseEntity<Object> authUser(@RequestBody String password, @PathVariable String login) {
+        List<User> users = userService.findByLoginAndPassword(login, password);
+
+        if (users.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.accepted().build();
+    }
+
     @GetMapping("/users")
     public List<User> retrieveAllUsers() {
         return userService.findAll();
