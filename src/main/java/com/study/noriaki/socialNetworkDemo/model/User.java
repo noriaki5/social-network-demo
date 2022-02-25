@@ -1,4 +1,4 @@
-package com.study.noriaki.socialNetworkDemo.User;
+package com.study.noriaki.socialNetworkDemo.model;
 
 import javax.persistence.*;
 import java.util.Set;
@@ -11,6 +11,7 @@ public class User {
     @GeneratedValue
     private Long id;
     private String name;
+    @Column(unique = true)
     private String login;
     private String password;
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)

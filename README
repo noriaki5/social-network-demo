@@ -1,0 +1,6 @@
+Запускать как обычное Spring приложение.
+
+Используется база H2.
+Консоль доступна по адресу http://localhost:8080/h2-console. Адрес базы: "jdbc:h2:mem:socialnetwork".
+http://localhost:8080/swagger-ui.html - документация Swagger.
+SocialNetwork.postman_collection.json - файл с примерами запросов для Postman.

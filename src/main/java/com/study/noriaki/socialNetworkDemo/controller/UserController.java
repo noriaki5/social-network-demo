@@ -1,6 +1,9 @@
-package com.study.noriaki.socialNetworkDemo.User;
+package com.study.noriaki.socialNetworkDemo.controller;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.study.noriaki.socialNetworkDemo.exception.UserNotFoundException;
+import com.study.noriaki.socialNetworkDemo.model.User;
+import com.study.noriaki.socialNetworkDemo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,22 +17,33 @@ import java.util.Set;
 @RestController
 public class UserController {
 
-    //@Autowired
-    private UserRepository userRepository;
+    private UserService userService;
 
     @Autowired
-    public void setUserRepository(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public void setUserService(UserService userService) {
+        this.userService = userService;
+    }
+
+    @PostMapping("/auth/{login}")
+    public ResponseEntity<Object> authUser(@RequestBody ObjectNode jsonNodes, @PathVariable String login) {
+        String password = jsonNodes.get("password").asText();
+        List<User> users = userService.findByLoginAndPassword(login, password);
+
+        if (users.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.accepted().build();
     }
 
     @GetMapping("/users")
     public List<User> retrieveAllUsers() {
-        return userRepository.findAll();
+        return userService.findAll();
     }
 
     @GetMapping("/users/{id}")
     public User retrieveUser(@PathVariable long id) {
-        Optional<User> user = userRepository.findById(id);
+        Optional<User> user = userService.findById(id);
 
         if (!user.isPresent()) {
             throw new UserNotFoundException("id=" + id);
@@ -39,8 +53,8 @@ public class UserController {
     }
 
     @GetMapping("/users/name/{name}")
-    public List<Optional<User>> findByName(@PathVariable String name) {
-        List<Optional<User>> users = userRepository.findByName(name);
+    public List<User> findByName(@PathVariable String name) {
+        List<User> users = userService.findByName(name);
 
         if (users.isEmpty()) {
             throw new UserNotFoundException("name=" + name);
@@ -51,7 +65,7 @@ public class UserController {
 
     @PostMapping("/users")
     public ResponseEntity<Object> createUser(@RequestBody User user) {
-        User savedUser = userRepository.save(user);
+        User savedUser = userService.save(user);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
                 .buildAndExpand(savedUser.getId()).toUri();
 
@@ -60,21 +74,21 @@ public class UserController {
 
     @PutMapping("/users/{id}")
     public ResponseEntity<Object> updateUser(@RequestBody User user, @PathVariable long id) {
-        Optional<User> userOptional = userRepository.findById(id);
+        Optional<User> userOptional = userService.findById(id);
 
         if (!userOptional.isPresent()) {
             return ResponseEntity.notFound().build();
         }
 
         user.setId(id);
-        userRepository.save(user);
+        userService.save(user);
 
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/friends/{id}")
     public Set<User> retrieveFriends(@PathVariable long id) {
-        Optional<User> user = userRepository.findById(id);
+        Optional<User> user = userService.findById(id);
 
         if (!user.isPresent()) {
             throw new UserNotFoundException("id=" + id);
@@ -92,10 +106,10 @@ public class UserController {
             return ResponseEntity.badRequest().build();
         }
 
-        User user = userRepository.getById(id);
-        User friend = userRepository.getById(friendId);
+        User user = userService.getById(id);
+        User friend = userService.getById(friendId);
         user.getFriends().add(friend);
-        userRepository.save(user);
+        userService.save(user);
 
         return ResponseEntity.noContent().build();
     }
@@ -105,10 +119,10 @@ public class UserController {
         long id = jsonNodes.get("id").asLong();
         long friendId = jsonNodes.get("friendId").asLong();
 
-        User user = userRepository.getById(id);
-        User friend = userRepository.getById(friendId);
+        User user = userService.getById(id);
+        User friend = userService.getById(friendId);
         user.getFriends().remove(friend);
-        userRepository.save(user);
+        userService.save(user);
 
         return ResponseEntity.noContent().build();
     }

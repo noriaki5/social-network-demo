@@ -1,5 +1,6 @@
-package com.study.noriaki.socialNetworkDemo.User;
+package com.study.noriaki.socialNetworkDemo.exception;
 
+import com.study.noriaki.socialNetworkDemo.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -12,5 +13,7 @@ import java.util.Optional;
 public interface UserRepository extends JpaRepository<User, Long> {
 
     @Query("select u from User u where u.name like %:name%")
-    List<Optional<User>> findByName(@Param("name") String name);
+    List<User> findByName(@Param("name") String name);
+
+    List<User> findByLoginAndPassword(String login, String password);
 }
