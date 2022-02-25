@@ -1,4 +1,4 @@
-package com.study.noriaki.socialNetworkDemo.User;
+package com.study.noriaki.socialNetworkDemo.exception;
 
 public class UserNotFoundException extends RuntimeException {
 

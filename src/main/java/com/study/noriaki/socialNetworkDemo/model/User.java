@@ -1,4 +1,4 @@
-package com.study.noriaki.socialNetworkDemo.User;
+package com.study.noriaki.socialNetworkDemo.model;
 
 import javax.persistence.*;
 import java.util.Set;
